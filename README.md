@@ -39,6 +39,7 @@ src/
 
 supabase/
   schema.sql       Tables users, providers, comparisons, offers, affiliate_clicks + politiques RLS
+  analytics.sql    Vues SQL pour suivre comparaisons, clics et prestataires
 ```
 
 ## Installation locale
@@ -110,6 +111,18 @@ Checklist manuelle :
 3. Les mettre dans `.env`.
 4. Executer le contenu de `supabase/schema.sql` dans le SQL Editor Supabase.
 5. Verifier que les tables `users`, `providers`, `comparisons`, `offers` et `affiliate_clicks` existent.
+6. Executer le contenu de `supabase/analytics.sql` pour creer les vues de suivi business.
+
+## Suivi business
+
+Apres avoir execute `supabase/analytics.sql`, vous pouvez lire les indicateurs dans le SQL Editor :
+
+```sql
+select * from analytics.business_kpis;
+select * from analytics.clicks_by_provider;
+select * from analytics.comparisons_by_corridor;
+select * from analytics.recent_affiliate_clicks;
+```
 
 ## Priorites suivantes
 
