@@ -12,7 +12,7 @@ Le projet est un MVP avance : il fonctionne en local sur web/mobile, calcule des
 - Assistant local pour aider l'utilisateur a comprendre les offres.
 - Selecteur de langue global : francais, anglais, espagnol, arabe, chinois, japonais, vietnamien, coreen.
 - Taux de change Frankfurter avec fallback local si l'API ne repond pas.
-- Enregistrement des comparaisons dans Supabase.
+- Enregistrement des comparaisons et des clics prestataires dans Supabase.
 - Schema SQL Supabase avec RLS de base.
 
 ## Limites importantes du MVP
@@ -38,7 +38,7 @@ src/
   utils/           Formatage montants/taux
 
 supabase/
-  schema.sql       Tables users, providers, comparisons, offers + politiques RLS
+  schema.sql       Tables users, providers, comparisons, offers, affiliate_clicks + politiques RLS
 ```
 
 ## Installation locale
@@ -109,7 +109,7 @@ Checklist manuelle :
 2. Recuperer l'URL du projet et la cle `anon public`.
 3. Les mettre dans `.env`.
 4. Executer le contenu de `supabase/schema.sql` dans le SQL Editor Supabase.
-5. Verifier que les tables `users`, `providers`, `comparisons` et `offers` existent.
+5. Verifier que les tables `users`, `providers`, `comparisons`, `offers` et `affiliate_clicks` existent.
 
 ## Priorites suivantes
 

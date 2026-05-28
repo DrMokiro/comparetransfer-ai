@@ -5,6 +5,7 @@ import { AppButton } from "../components/AppButton";
 import { AppCard } from "../components/AppCard";
 import { BrandText } from "../components/BrandText";
 import { ProviderLogo } from "../components/ProviderLogo";
+import { trackAffiliateClick } from "../services/affiliateClicks";
 import { getProviderById } from "../services/offers";
 import { colors } from "../theme/colors";
 import { spacing } from "../theme/spacing";
@@ -22,6 +23,15 @@ export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
         <Text style={styles.title}>Prestataire introuvable</Text>
       </View>
     );
+  }
+
+  async function continueToProvider() {
+    if (!provider) {
+      return;
+    }
+
+    await trackAffiliateClick({ provider });
+    await Linking.openURL(provider.affiliateUrl);
   }
 
   return (
@@ -68,7 +78,7 @@ export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
         En continuant, vous quittez CompareTransfer AI. Vérifiez toujours les frais, le taux et le délai avant de valider.
       </Text>
 
-      <AppButton label={`Continuer vers ${provider.name}`} onPress={() => Linking.openURL(provider.affiliateUrl)} />
+      <AppButton label={`Continuer vers ${provider.name}`} onPress={continueToProvider} />
     </ScrollView>
   );
 }

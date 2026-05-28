@@ -41,13 +41,25 @@ create table if not exists public.offers (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.affiliate_clicks (
+  id uuid primary key default gen_random_uuid(),
+  provider_id text not null,
+  provider_name text not null,
+  affiliate_url text not null,
+  source text not null default 'provider_detail',
+  created_at timestamptz not null default now()
+);
+
 create index if not exists comparisons_user_id_idx on public.comparisons(user_id);
 create index if not exists offers_provider_id_idx on public.offers(provider_id);
 create index if not exists offers_comparison_id_idx on public.offers(comparison_id);
+create index if not exists affiliate_clicks_provider_id_idx on public.affiliate_clicks(provider_id);
+create index if not exists affiliate_clicks_created_at_idx on public.affiliate_clicks(created_at);
 
 alter table public.providers enable row level security;
 alter table public.comparisons enable row level security;
 alter table public.offers enable row level security;
+alter table public.affiliate_clicks enable row level security;
 
 drop policy if exists "Public providers are readable" on public.providers;
 create policy "Public providers are readable"
@@ -76,3 +88,17 @@ create policy "Users can read their comparisons"
   for select
   to authenticated
   using (user_id = auth.uid());
+
+drop policy if exists "Anonymous affiliate clicks can be created" on public.affiliate_clicks;
+create policy "Anonymous affiliate clicks can be created"
+  on public.affiliate_clicks
+  for insert
+  to anon
+  with check (true);
+
+drop policy if exists "Authenticated affiliate clicks can be created" on public.affiliate_clicks;
+create policy "Authenticated affiliate clicks can be created"
+  on public.affiliate_clicks
+  for insert
+  to authenticated
+  with check (true);
