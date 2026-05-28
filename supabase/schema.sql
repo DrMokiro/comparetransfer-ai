@@ -46,15 +46,27 @@ create table if not exists public.affiliate_clicks (
   provider_id text not null,
   provider_name text not null,
   affiliate_url text not null,
+  amount numeric(14, 2),
+  from_country text,
+  to_country text,
+  send_currency text,
+  receive_currency text,
   source text not null default 'provider_detail',
   created_at timestamptz not null default now()
 );
+
+alter table public.affiliate_clicks add column if not exists amount numeric(14, 2);
+alter table public.affiliate_clicks add column if not exists from_country text;
+alter table public.affiliate_clicks add column if not exists to_country text;
+alter table public.affiliate_clicks add column if not exists send_currency text;
+alter table public.affiliate_clicks add column if not exists receive_currency text;
 
 create index if not exists comparisons_user_id_idx on public.comparisons(user_id);
 create index if not exists offers_provider_id_idx on public.offers(provider_id);
 create index if not exists offers_comparison_id_idx on public.offers(comparison_id);
 create index if not exists affiliate_clicks_provider_id_idx on public.affiliate_clicks(provider_id);
 create index if not exists affiliate_clicks_created_at_idx on public.affiliate_clicks(created_at);
+create index if not exists affiliate_clicks_corridor_idx on public.affiliate_clicks(from_country, to_country);
 
 alter table public.providers enable row level security;
 alter table public.comparisons enable row level security;

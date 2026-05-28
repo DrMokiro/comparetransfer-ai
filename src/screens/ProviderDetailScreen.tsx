@@ -16,6 +16,7 @@ type ProviderDetailScreenProps = NativeStackScreenProps<RootStackParamList, "Pro
 
 export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
   const provider = getProviderById(route.params.providerId);
+  const comparison = route.params.comparison;
 
   if (!provider) {
     return (
@@ -30,7 +31,7 @@ export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
       return;
     }
 
-    await trackAffiliateClick({ provider });
+    await trackAffiliateClick({ comparison, provider });
     await Linking.openURL(provider.affiliateUrl);
   }
 

@@ -120,6 +120,7 @@ Apres avoir execute `supabase/analytics.sql`, vous pouvez lire les indicateurs d
 ```sql
 select * from analytics.business_kpis;
 select * from analytics.clicks_by_provider;
+select * from analytics.clicks_by_corridor;
 select * from analytics.comparisons_by_corridor;
 select * from analytics.recent_affiliate_clicks;
 ```

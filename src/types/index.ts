@@ -42,6 +42,7 @@ export type RootStackParamList = {
   };
   ProviderDetail: {
     providerId: string;
+    comparison?: ComparisonInput;
   };
   Assistant: {
     comparison?: ComparisonInput;

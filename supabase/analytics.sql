@@ -44,8 +44,29 @@ select
   provider_id,
   provider_name,
   affiliate_url,
+  amount,
+  from_country,
+  to_country,
+  send_currency,
+  receive_currency,
   source,
   created_at
 from public.affiliate_clicks
 order by created_at desc
 limit 50;
+
+create or replace view analytics.clicks_by_corridor as
+select
+  from_country,
+  to_country,
+  send_currency,
+  receive_currency,
+  count(*) as total_clicks,
+  round(avg(amount), 2) as average_amount,
+  min(created_at) as first_click_at,
+  max(created_at) as last_click_at
+from public.affiliate_clicks
+where from_country is not null
+  and to_country is not null
+group by from_country, to_country, send_currency, receive_currency
+order by total_clicks desc, last_click_at desc;

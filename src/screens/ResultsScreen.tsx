@@ -109,7 +109,7 @@ export function ResultsScreen({ navigation, route }: ResultsScreenProps) {
             offer={offer}
             sendCurrency={comparison.sendCurrency}
             receiveCurrency={comparison.receiveCurrency}
-            onPress={() => navigation.navigate("ProviderDetail", { providerId: offer.providerId })}
+            onPress={() => navigation.navigate("ProviderDetail", { comparison, providerId: offer.providerId })}
           />
         ))}
       </View>
