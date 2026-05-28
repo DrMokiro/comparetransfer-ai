@@ -8,6 +8,8 @@ import { CountrySelect } from "../components/CountrySelect";
 import { CurrencyPreview } from "../components/CurrencyPreview";
 import { FormField } from "../components/FormField";
 import { defaultComparison } from "../data/mockComparisons";
+import { useLanguage } from "../i18n/LanguageContext";
+import { saveComparison } from "../services/comparisons";
 import { colors } from "../theme/colors";
 import { spacing } from "../theme/spacing";
 import { typography } from "../theme/typography";
@@ -16,6 +18,7 @@ import { CountryCode, CurrencyCode, RootStackParamList } from "../types";
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
 export function HomeScreen({ navigation }: HomeScreenProps) {
+  const { t } = useLanguage();
   const [amount, setAmount] = useState(String(defaultComparison.amount));
   const [fromCountry, setFromCountry] = useState<CountryCode>(defaultComparison.fromCountry);
   const [toCountry, setToCountry] = useState<CountryCode>(defaultComparison.toCountry);
@@ -23,14 +26,18 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
   const [receiveCurrency, setReceiveCurrency] = useState<CurrencyCode>(defaultComparison.receiveCurrency);
 
   function compareOffers() {
+    const comparison = {
+      amount: Number(amount) || defaultComparison.amount,
+      fromCountry,
+      toCountry,
+      sendCurrency,
+      receiveCurrency
+    };
+
+    saveComparison(comparison);
+
     navigation.navigate("Results", {
-      comparison: {
-        amount: Number(amount) || defaultComparison.amount,
-        fromCountry,
-        toCountry,
-        sendCurrency,
-        receiveCurrency
-      }
+      comparison
     });
   }
 
@@ -41,16 +48,14 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
     >
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.hero}>
-          <Text style={styles.kicker}>Comparateur fintech international</Text>
-          <Text style={styles.title}>Envoyez plus, payez moins.</Text>
-          <Text style={styles.subtitle}>
-            Comparez les frais, les taux et les delais avant de choisir votre prestataire.
-          </Text>
+          <Text style={styles.kicker}>{t("home.kicker")}</Text>
+          <Text style={styles.title}>{t("home.title")}</Text>
+          <Text style={styles.subtitle}>{t("home.subtitle")}</Text>
         </View>
 
         <AppCard style={styles.formCard}>
           <FormField
-            label="Montant a envoyer"
+            label={t("home.amount")}
             value={amount}
             onChangeText={setAmount}
             keyboardType="numeric"
@@ -58,7 +63,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
           />
 
           <CountrySelect
-            label="Pays de depart"
+            label={t("home.fromCountry")}
             value={fromCountry}
             onChange={(country) => {
               setFromCountry(country.value);
@@ -67,7 +72,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
           />
 
           <CountrySelect
-            label="Pays de destination"
+            label={t("home.toCountry")}
             value={toCountry}
             onChange={(country) => {
               setToCountry(country.value);
@@ -76,12 +81,12 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
           />
 
           <View style={styles.currencyGrid}>
-            <CurrencyPreview label="Devise envoyee" value={sendCurrency} />
-            <CurrencyPreview label="Devise recue" value={receiveCurrency} />
+            <CurrencyPreview label={t("home.sendCurrency")} value={sendCurrency} />
+            <CurrencyPreview label={t("home.receiveCurrency")} value={receiveCurrency} />
           </View>
 
           <AppButton
-            label="Comparer"
+            label={t("home.compare")}
             icon={<Ionicons name="analytics-outline" size={20} color={colors.surface} />}
             onPress={compareOffers}
           />

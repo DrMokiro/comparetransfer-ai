@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Linking, ScrollView, StyleSheet, Text, View } from "react-native";
 import { AppButton } from "../components/AppButton";
 import { AppCard } from "../components/AppCard";
+import { BrandText } from "../components/BrandText";
 import { ProviderLogo } from "../components/ProviderLogo";
 import { getProviderById } from "../services/offers";
 import { colors } from "../theme/colors";
@@ -27,8 +28,8 @@ export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
       <View style={styles.header}>
         <ProviderLogo label={provider.logo} />
         <View style={styles.headerText}>
-          <Text style={styles.title}>{provider.name}</Text>
-          <Text style={styles.subtitle}>Analyse detaillee du prestataire</Text>
+          <BrandText style={styles.title}>{provider.name}</BrandText>
+          <Text style={styles.subtitle}>Analyse détaillée du prestataire</Text>
         </View>
       </View>
 
@@ -40,7 +41,7 @@ export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
       </AppCard>
 
       <AppCard style={styles.section}>
-        <Text style={styles.sectionTitle}>Inconvenients</Text>
+        <Text style={styles.sectionTitle}>Inconvénients</Text>
         {provider.cons.map((item) => (
           <Text key={item} style={styles.negativeItem}>- {item}</Text>
         ))}
@@ -51,7 +52,7 @@ export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
         <Text style={styles.body}>{provider.countriesAvailable.join(", ")}</Text>
       </AppCard>
 
-      <AppButton label="Ouvrir le lien affilie" onPress={() => Linking.openURL(provider.affiliateUrl)} />
+      <AppButton label="Ouvrir le lien affilié" onPress={() => Linking.openURL(provider.affiliateUrl)} />
     </ScrollView>
   );
 }

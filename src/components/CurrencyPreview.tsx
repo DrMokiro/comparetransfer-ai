@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import { getCurrencyLabel } from "../data/catalog";
+import { useLanguage } from "../i18n/LanguageContext";
 import { colors } from "../theme/colors";
 import { spacing } from "../theme/spacing";
 import { CurrencyCode } from "../types";
@@ -10,6 +11,8 @@ type CurrencyPreviewProps = {
 };
 
 export function CurrencyPreview({ label, value }: CurrencyPreviewProps) {
+  const { t } = useLanguage();
+
   return (
     <View style={styles.wrapper}>
       <Text style={styles.label}>{label}</Text>
@@ -19,7 +22,7 @@ export function CurrencyPreview({ label, value }: CurrencyPreviewProps) {
         </View>
         <View style={styles.textBlock}>
           <Text style={styles.value}>{getCurrencyLabel(value)}</Text>
-          <Text style={styles.helper}>Devise detectee automatiquement</Text>
+          <Text style={styles.helper}>{t("currency.autoDetected")}</Text>
         </View>
       </View>
     </View>

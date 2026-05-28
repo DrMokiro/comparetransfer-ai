@@ -2,12 +2,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 import { AppButton } from "./AppButton";
 import { AppCard } from "./AppCard";
+import { BrandText } from "./BrandText";
 import { ProviderLogo } from "./ProviderLogo";
 import { ScoreBadge } from "./ScoreBadge";
+import { useLanguage } from "../i18n/LanguageContext";
 import { colors } from "../theme/colors";
 import { spacing } from "../theme/spacing";
 import { OfferWithProvider } from "../types";
-import { formatMoney } from "../utils/format";
+import { formatExchangeRate, formatMoney } from "../utils/format";
 
 type OfferCardProps = {
   offer: OfferWithProvider;
@@ -17,12 +19,14 @@ type OfferCardProps = {
 };
 
 export function OfferCard({ offer, receiveCurrency, sendCurrency, onPress }: OfferCardProps) {
+  const { t } = useLanguage();
+
   return (
     <AppCard style={styles.card}>
       <View style={styles.header}>
         <ProviderLogo label={offer.provider.logo} />
         <View style={styles.titleBlock}>
-          <Text style={styles.providerName}>{offer.provider.name}</Text>
+          <BrandText style={styles.providerName}>{offer.provider.name}</BrandText>
           <Text style={styles.delay}>{offer.estimatedDelay}</Text>
         </View>
         <ScoreBadge score={offer.globalScore} />
@@ -30,21 +34,21 @@ export function OfferCard({ offer, receiveCurrency, sendCurrency, onPress }: Off
 
       <View style={styles.metrics}>
         <View>
-          <Text style={styles.metricLabel}>Recu</Text>
+          <Text style={styles.metricLabel}>{t("offer.received")}</Text>
           <Text style={styles.amount}>{formatMoney(offer.amountReceived, receiveCurrency)}</Text>
         </View>
         <View style={styles.metricRight}>
-          <Text style={styles.metricLabel}>Frais</Text>
+          <Text style={styles.metricLabel}>{t("offer.fees")}</Text>
           <Text style={styles.metricValue}>{formatMoney(offer.fee, sendCurrency)}</Text>
         </View>
       </View>
 
       <View style={styles.rateRow}>
         <Ionicons name="swap-horizontal" size={18} color={colors.accent} />
-        <Text style={styles.rateText}>1 {sendCurrency} = {offer.exchangeRate.toFixed(2)} {receiveCurrency}</Text>
+        <Text style={styles.rateText}>{formatExchangeRate(offer.exchangeRate, sendCurrency, receiveCurrency)}</Text>
       </View>
 
-      <AppButton label="Voir l'offre" onPress={onPress} />
+      <AppButton label={t("offer.viewOffer")} onPress={onPress} />
     </AppCard>
   );
 }

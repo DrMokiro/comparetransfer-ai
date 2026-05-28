@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useMemo, useState } from "react";
 import { FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { CountryOption, countries, getCurrencyLabel } from "../data/catalog";
+import { useLanguage } from "../i18n/LanguageContext";
 import { colors } from "../theme/colors";
 import { spacing } from "../theme/spacing";
 import { CountryCode } from "../types";
@@ -20,6 +21,7 @@ function normalizeSearch(value: string) {
 }
 
 export function CountrySelect({ label, value, onChange }: CountrySelectProps) {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const selectedCountry = countries.find((country) => country.value === value) ?? countries[0];
@@ -65,7 +67,7 @@ export function CountrySelect({ label, value, onChange }: CountrySelectProps) {
           <View style={styles.modalHeader}>
             <View>
               <Text style={styles.modalTitle}>{label}</Text>
-              <Text style={styles.modalSubtitle}>{filteredCountries.length} pays disponibles</Text>
+              <Text style={styles.modalSubtitle}>{t("country.available", { count: filteredCountries.length })}</Text>
             </View>
             <Pressable style={styles.closeButton} onPress={() => setIsOpen(false)}>
               <Ionicons name="close" size={24} color={colors.ink} />
@@ -78,7 +80,7 @@ export function CountrySelect({ label, value, onChange }: CountrySelectProps) {
               value={query}
               onChangeText={setQuery}
               autoFocus
-              placeholder="Rechercher un pays, une devise..."
+              placeholder={t("country.search")}
               placeholderTextColor={colors.muted}
               style={styles.searchInput}
             />
@@ -110,8 +112,8 @@ export function CountrySelect({ label, value, onChange }: CountrySelectProps) {
             }}
             ListEmptyComponent={
               <View style={styles.emptyState}>
-                <Text style={styles.emptyTitle}>Aucun pays trouve</Text>
-                <Text style={styles.emptyText}>Essayez avec le nom du pays, son code ou sa devise.</Text>
+                <Text style={styles.emptyTitle}>{t("country.emptyTitle")}</Text>
+                <Text style={styles.emptyText}>{t("country.emptyText")}</Text>
               </View>
             }
           />

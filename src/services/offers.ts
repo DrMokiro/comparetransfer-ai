@@ -65,9 +65,7 @@ function calculateGlobalScore(rule: ProviderPricingRule, fee: number, amount: nu
   return Math.round(feeScore * 0.32 + speedScore * 0.24 + rateScore * 0.24 + rule.reliabilityScore * 0.2);
 }
 
-function buildOffer(comparison: ComparisonInput, rule: ProviderPricingRule): Offer | null {
-  const baseRate = getApproximateExchangeRate(comparison.sendCurrency, comparison.receiveCurrency);
-
+function buildOffer(comparison: ComparisonInput, rule: ProviderPricingRule, baseRate: number): Offer | null {
   if (!Number.isFinite(baseRate) || baseRate <= 0) {
     return null;
   }
@@ -91,11 +89,13 @@ function buildOffer(comparison: ComparisonInput, rule: ProviderPricingRule): Off
   };
 }
 
-export function getOffersForComparison(comparison: ComparisonInput): OfferWithProvider[] {
+export function getOffersForComparison(comparison: ComparisonInput, exchangeRate?: number): OfferWithProvider[] {
+  const baseRate = exchangeRate ?? getApproximateExchangeRate(comparison.sendCurrency, comparison.receiveCurrency);
+
   return providerPricingRules
     .map((rule) => {
       const provider = mockProviders.find((item) => item.id === rule.providerId);
-      const offer = buildOffer(comparison, rule);
+      const offer = buildOffer(comparison, rule, baseRate);
 
       if (!provider || !offer) {
         return null;

@@ -1,11 +1,12 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { AppButton } from "../components/AppButton";
 import { AppCard } from "../components/AppCard";
 import { defaultComparison } from "../data/mockComparisons";
 import { answerAssistantQuestion } from "../services/assistant";
+import { getExchangeRate } from "../services/exchangeRates";
 import { getOffersForComparison } from "../services/offers";
 import { colors } from "../theme/colors";
 import { spacing } from "../theme/spacing";
@@ -26,7 +27,8 @@ const quickQuestions = [
 
 export function AssistantScreen({ route }: AssistantScreenProps) {
   const comparison = route.params?.comparison ?? defaultComparison;
-  const offers = useMemo(() => getOffersForComparison(comparison), [comparison]);
+  const [exchangeRate, setExchangeRate] = useState<number | undefined>();
+  const offers = useMemo(() => getOffersForComparison(comparison, exchangeRate), [comparison, exchangeRate]);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -35,6 +37,20 @@ export function AssistantScreen({ route }: AssistantScreenProps) {
       text: "Bonjour, je peux comparer les offres selon les frais, la vitesse ou le score global."
     }
   ]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    getExchangeRate(comparison.sendCurrency, comparison.receiveCurrency).then((rateInfo) => {
+      if (isMounted) {
+        setExchangeRate(rateInfo.rate);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [comparison.receiveCurrency, comparison.sendCurrency]);
 
   function sendMessage(text = input) {
     const trimmedText = text.trim();
@@ -62,7 +78,7 @@ export function AssistantScreen({ route }: AssistantScreenProps) {
         <AppCard style={styles.contextCard}>
           <Text style={styles.contextTitle}>Assistant CompareTransfer</Text>
           <Text style={styles.contextText}>
-            Les reponses utilisent les donnees fictives du MVP pour cette simulation.
+            Les réponses utilisent les données fictives du MVP pour cette simulation.
           </Text>
         </AppCard>
 

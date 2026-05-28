@@ -4,6 +4,9 @@ dist/
 web-build/
 .env
 .env.*
+!.env.example
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+expo-error.log
+expo-output.log

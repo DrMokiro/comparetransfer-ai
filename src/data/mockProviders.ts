@@ -6,8 +6,8 @@ export const mockProviders: Provider[] = [
     name: "Wise",
     logo: "W",
     countriesAvailable: ["FR", "US", "GB", "IN", "CA", "MA"],
-    pros: ["Taux de change proche du marche", "Frais transparents", "Experience mobile fluide"],
-    cons: ["Retrait cash limite", "Verification requise sur certains corridors"],
+    pros: ["Taux de change proche du marché", "Frais transparents", "Expérience mobile fluide"],
+    cons: ["Retrait cash limité", "Vérification requise sur certains corridors"],
     affiliateUrl: "https://wise.com"
   },
   {
@@ -15,8 +15,8 @@ export const mockProviders: Provider[] = [
     name: "Remitly",
     logo: "R",
     countriesAvailable: ["FR", "US", "GB", "SN", "MA", "IN"],
-    pros: ["Options express", "Bon reseau de retrait", "Promotions frequentes"],
-    cons: ["Frais variables", "Taux moins competitif en livraison rapide"],
+    pros: ["Options express", "Bon réseau de retrait", "Promotions fréquentes"],
+    cons: ["Frais variables", "Taux moins compétitif en livraison rapide"],
     affiliateUrl: "https://www.remitly.com"
   },
   {
@@ -24,8 +24,8 @@ export const mockProviders: Provider[] = [
     name: "Western Union",
     logo: "WU",
     countriesAvailable: ["FR", "US", "GB", "SN", "MA", "IN", "CA"],
-    pros: ["Tres large couverture pays", "Retrait cash disponible", "Marque reconnue"],
-    cons: ["Frais parfois eleves", "Taux de change moins lisible"],
+    pros: ["Très large couverture pays", "Retrait cash disponible", "Marque reconnue"],
+    cons: ["Frais parfois élevés", "Taux de change moins lisible"],
     affiliateUrl: "https://www.westernunion.com"
   },
   {

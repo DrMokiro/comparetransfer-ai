@@ -44,3 +44,35 @@ create table if not exists public.offers (
 create index if not exists comparisons_user_id_idx on public.comparisons(user_id);
 create index if not exists offers_provider_id_idx on public.offers(provider_id);
 create index if not exists offers_comparison_id_idx on public.offers(comparison_id);
+
+alter table public.providers enable row level security;
+alter table public.comparisons enable row level security;
+alter table public.offers enable row level security;
+
+drop policy if exists "Public providers are readable" on public.providers;
+create policy "Public providers are readable"
+  on public.providers
+  for select
+  to anon, authenticated
+  using (true);
+
+drop policy if exists "Anonymous comparisons can be created" on public.comparisons;
+create policy "Anonymous comparisons can be created"
+  on public.comparisons
+  for insert
+  to anon
+  with check (user_id is null);
+
+drop policy if exists "Authenticated users can create their comparisons" on public.comparisons;
+create policy "Authenticated users can create their comparisons"
+  on public.comparisons
+  for insert
+  to authenticated
+  with check (user_id = auth.uid() or user_id is null);
+
+drop policy if exists "Users can read their comparisons" on public.comparisons;
+create policy "Users can read their comparisons"
+  on public.comparisons
+  for select
+  to authenticated
+  using (user_id = auth.uid());
