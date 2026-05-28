@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { AppButton } from "../components/AppButton";
+import { AppCard } from "../components/AppCard";
 import { OfferCard } from "../components/OfferCard";
 import { getCountryByCode } from "../data/catalog";
 import { useLanguage } from "../i18n/LanguageContext";
@@ -82,6 +83,17 @@ export function ResultsScreen({ navigation, route }: ResultsScreenProps) {
         />
       </View>
 
+      <AppCard style={styles.trustCard}>
+        <View style={styles.trustHeader}>
+          <Ionicons name="information-circle-outline" size={20} color={colors.primary} />
+          <Text style={styles.trustTitle}>Pourquoi ce classement ?</Text>
+        </View>
+        <Text style={styles.trustText}>
+          Nous classons les offres selon le montant recu, les frais estimes, le taux applique et le delai.
+          Les frais restent indicatifs : verifiez toujours le montant final chez le prestataire avant de valider un transfert.
+        </Text>
+      </AppCard>
+
       <View style={styles.list}>
         {offers.map((offer, index) => (
           <OfferCard
@@ -90,7 +102,7 @@ export function ResultsScreen({ navigation, route }: ResultsScreenProps) {
             insight={
               index === 0
                 ? bestOfferGain > 0
-                  ? `Vous recevez ${formatMoney(bestOfferGain, comparison.receiveCurrency)} de plus que l'offre suivante.`
+                  ? `Meilleure estimation : vous recevez ${formatMoney(bestOfferGain, comparison.receiveCurrency)} de plus que l'offre suivante.`
                   : "Meilleur équilibre entre montant reçu, frais et délai."
                 : undefined
             }
@@ -138,6 +150,24 @@ const styles = StyleSheet.create({
   },
   assistantButton: {
     alignSelf: "flex-start"
+  },
+  trustCard: {
+    gap: spacing.sm
+  },
+  trustHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm
+  },
+  trustTitle: {
+    color: colors.ink,
+    fontSize: 16,
+    fontWeight: "800"
+  },
+  trustText: {
+    color: colors.text,
+    fontSize: 14,
+    lineHeight: 21
   },
   list: {
     gap: spacing.md
