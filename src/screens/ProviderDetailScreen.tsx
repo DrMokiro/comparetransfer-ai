@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useState } from "react";
 import { Linking, ScrollView, StyleSheet, Text, View } from "react-native";
 import { AppButton } from "../components/AppButton";
 import { AppCard } from "../components/AppCard";
@@ -17,6 +18,7 @@ type ProviderDetailScreenProps = NativeStackScreenProps<RootStackParamList, "Pro
 export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
   const provider = getProviderById(route.params.providerId);
   const comparison = route.params.comparison;
+  const [isLeaving, setIsLeaving] = useState(false);
 
   if (!provider) {
     return (
@@ -27,12 +29,18 @@ export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
   }
 
   async function continueToProvider() {
-    if (!provider) {
+    if (!provider || isLeaving) {
       return;
     }
 
-    await trackAffiliateClick({ comparison, provider });
-    await Linking.openURL(provider.affiliateUrl);
+    setIsLeaving(true);
+
+    try {
+      await trackAffiliateClick({ comparison, provider });
+      await Linking.openURL(provider.affiliateUrl);
+    } finally {
+      setIsLeaving(false);
+    }
   }
 
   return (
@@ -79,7 +87,11 @@ export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
         En continuant, vous quittez CompareTransfer AI. Vérifiez toujours les frais, le taux et le délai avant de valider.
       </Text>
 
-      <AppButton label={`Continuer vers ${provider.name}`} onPress={continueToProvider} />
+      <AppButton
+        label={isLeaving ? "Ouverture..." : `Continuer vers ${provider.name}`}
+        onPress={continueToProvider}
+        disabled={isLeaving}
+      />
     </ScrollView>
   );
 }
