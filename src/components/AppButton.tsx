@@ -6,19 +6,23 @@ import { spacing } from "../theme/spacing";
 type AppButtonProps = {
   label: string;
   icon?: ReactNode;
+  disabled?: boolean;
   variant?: "primary" | "secondary" | "ghost";
   style?: ViewStyle;
   onPress: () => void;
 };
 
-export function AppButton({ label, icon, variant = "primary", style, onPress }: AppButtonProps) {
+export function AppButton({ label, icon, disabled = false, variant = "primary", style, onPress }: AppButtonProps) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      disabled={disabled}
       style={({ pressed }) => [
         styles.button,
         styles[variant],
-        pressed && styles.pressed,
+        pressed && !disabled && styles.pressed,
+        disabled && styles.disabled,
         style
       ]}
       onPress={onPress}
@@ -52,6 +56,9 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.82
+  },
+  disabled: {
+    opacity: 0.55
   },
   label: {
     color: colors.surface,

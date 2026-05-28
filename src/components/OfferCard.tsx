@@ -12,17 +12,26 @@ import { OfferWithProvider } from "../types";
 import { formatExchangeRate, formatMoney } from "../utils/format";
 
 type OfferCardProps = {
+  highlightLabel?: string;
+  insight?: string;
   offer: OfferWithProvider;
   receiveCurrency: string;
   sendCurrency: string;
   onPress: () => void;
 };
 
-export function OfferCard({ offer, receiveCurrency, sendCurrency, onPress }: OfferCardProps) {
+export function OfferCard({ highlightLabel, insight, offer, receiveCurrency, sendCurrency, onPress }: OfferCardProps) {
   const { t } = useLanguage();
 
   return (
     <AppCard style={styles.card}>
+      {highlightLabel ? (
+        <View style={styles.highlightBadge}>
+          <Ionicons name="trophy-outline" size={15} color={colors.primaryDark} />
+          <Text style={styles.highlightText}>{highlightLabel}</Text>
+        </View>
+      ) : null}
+
       <View style={styles.header}>
         <ProviderLogo label={offer.provider.logo} />
         <View style={styles.titleBlock}>
@@ -43,6 +52,8 @@ export function OfferCard({ offer, receiveCurrency, sendCurrency, onPress }: Off
         </View>
       </View>
 
+      {insight ? <Text style={styles.insight}>{insight}</Text> : null}
+
       <View style={styles.rateRow}>
         <Ionicons name="swap-horizontal" size={18} color={colors.accent} />
         <Text style={styles.rateText}>{formatExchangeRate(offer.exchangeRate, sendCurrency, receiveCurrency)}</Text>
@@ -56,6 +67,23 @@ export function OfferCard({ offer, receiveCurrency, sendCurrency, onPress }: Off
 const styles = StyleSheet.create({
   card: {
     gap: spacing.md
+  },
+  highlightBadge: {
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+    backgroundColor: "#E6F4EF",
+    borderColor: "#B9DED1",
+    borderRadius: 999,
+    borderWidth: 1,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 6
+  },
+  highlightText: {
+    color: colors.primaryDark,
+    fontSize: 13,
+    fontWeight: "800"
   },
   header: {
     flexDirection: "row",
@@ -96,6 +124,12 @@ const styles = StyleSheet.create({
     color: colors.ink,
     fontSize: 17,
     fontWeight: "700"
+  },
+  insight: {
+    color: colors.primaryDark,
+    fontSize: 14,
+    fontWeight: "700",
+    lineHeight: 20
   },
   rateRow: {
     flexDirection: "row",

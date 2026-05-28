@@ -25,6 +25,11 @@ export function ResultsScreen({ navigation, route }: ResultsScreenProps) {
   const [isRefreshingRate, setIsRefreshingRate] = useState(false);
   const offers = getOffersForComparison(comparison, rateInfo.rate);
   const destinationCountry = getCountryByCode(comparison.toCountry);
+  const bestOffer = offers[0];
+  const nextOffer = offers[1];
+  const bestOfferGain = bestOffer && nextOffer
+    ? bestOffer.amountReceived - nextOffer.amountReceived
+    : 0;
 
   useEffect(() => {
     let isMounted = true;
@@ -78,9 +83,17 @@ export function ResultsScreen({ navigation, route }: ResultsScreenProps) {
       </View>
 
       <View style={styles.list}>
-        {offers.map((offer) => (
+        {offers.map((offer, index) => (
           <OfferCard
             key={offer.id}
+            highlightLabel={index === 0 ? "Meilleur choix" : undefined}
+            insight={
+              index === 0
+                ? bestOfferGain > 0
+                  ? `Vous recevez ${formatMoney(bestOfferGain, comparison.receiveCurrency)} de plus que l'offre suivante.`
+                  : "Meilleur équilibre entre montant reçu, frais et délai."
+                : undefined
+            }
             offer={offer}
             sendCurrency={comparison.sendCurrency}
             receiveCurrency={comparison.receiveCurrency}

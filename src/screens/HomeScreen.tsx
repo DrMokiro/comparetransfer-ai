@@ -24,18 +24,31 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
   const [toCountry, setToCountry] = useState<CountryCode>(defaultComparison.toCountry);
   const [sendCurrency, setSendCurrency] = useState<CurrencyCode>(defaultComparison.sendCurrency);
   const [receiveCurrency, setReceiveCurrency] = useState<CurrencyCode>(defaultComparison.receiveCurrency);
+  const [amountError, setAmountError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function compareOffers() {
+  async function compareOffers() {
+    const parsedAmount = Number(amount.replace(",", "."));
+
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      setAmountError("Saisissez un montant supérieur à 0.");
+      return;
+    }
+
+    setAmountError("");
+    setIsSubmitting(true);
+
     const comparison = {
-      amount: Number(amount) || defaultComparison.amount,
+      amount: parsedAmount,
       fromCountry,
       toCountry,
       sendCurrency,
       receiveCurrency
     };
 
-    saveComparison(comparison);
+    await saveComparison(comparison);
 
+    setIsSubmitting(false);
     navigation.navigate("Results", {
       comparison
     });
@@ -57,10 +70,16 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
           <FormField
             label={t("home.amount")}
             value={amount}
-            onChangeText={setAmount}
+            onChangeText={(nextAmount) => {
+              setAmount(nextAmount);
+              if (amountError) {
+                setAmountError("");
+              }
+            }}
             keyboardType="numeric"
             placeholder="1000"
           />
+          {amountError ? <Text style={styles.errorText}>{amountError}</Text> : null}
 
           <CountrySelect
             label={t("home.fromCountry")}
@@ -89,6 +108,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
             label={t("home.compare")}
             icon={<Ionicons name="analytics-outline" size={20} color={colors.surface} />}
             onPress={compareOffers}
+            disabled={isSubmitting}
           />
         </AppCard>
       </ScrollView>
@@ -128,6 +148,12 @@ const styles = StyleSheet.create({
   },
   formCard: {
     gap: spacing.lg
+  },
+  errorText: {
+    color: colors.danger,
+    fontSize: 13,
+    fontWeight: "700",
+    marginTop: -spacing.sm
   },
   currencyGrid: {
     gap: spacing.md
