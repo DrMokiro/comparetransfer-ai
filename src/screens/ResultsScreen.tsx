@@ -89,8 +89,8 @@ export function ResultsScreen({ navigation, route }: ResultsScreenProps) {
           <Text style={styles.trustTitle}>Pourquoi ce classement ?</Text>
         </View>
         <Text style={styles.trustText}>
-          Nous classons les offres selon le montant recu, les frais estimes, le taux applique et le delai.
-          Les frais restent indicatifs : verifiez toujours le montant final chez le prestataire avant de valider un transfert.
+          Nous classons les offres selon le montant reçu, les frais estimés, le taux appliqué et le délai.
+          Les frais restent indicatifs : vérifiez toujours le montant final chez le prestataire avant de valider un transfert.
         </Text>
       </AppCard>
 
@@ -119,9 +119,12 @@ export function ResultsScreen({ navigation, route }: ResultsScreenProps) {
 
 const styles = StyleSheet.create({
   content: {
+    alignSelf: "center",
+    maxWidth: 1120,
     padding: spacing.md,
     paddingBottom: spacing.xl,
-    gap: spacing.lg
+    gap: spacing.lg,
+    width: "100%"
   },
   summary: {
     gap: spacing.md
