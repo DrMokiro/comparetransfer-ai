@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Linking, ScrollView, StyleSheet, Text, View } from "react-native";
 import { AppButton } from "../components/AppButton";
@@ -33,6 +34,17 @@ export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
         </View>
       </View>
 
+      <AppCard style={styles.noticeCard}>
+        <View style={styles.noticeHeader}>
+          <Ionicons name="shield-checkmark-outline" size={20} color={colors.primary} />
+          <Text style={styles.noticeTitle}>Données indicatives</Text>
+        </View>
+        <Text style={styles.body}>
+          Cette fiche vous aide à comparer les points forts et les limites du prestataire.
+          Le montant final, les frais exacts et les conditions seront confirmés sur le site de {provider.name}.
+        </Text>
+      </AppCard>
+
       <AppCard style={styles.section}>
         <Text style={styles.sectionTitle}>Avantages</Text>
         {provider.pros.map((item) => (
@@ -52,26 +64,33 @@ export function ProviderDetailScreen({ route }: ProviderDetailScreenProps) {
         <Text style={styles.body}>{provider.countriesAvailable.join(", ")}</Text>
       </AppCard>
 
-      <AppButton label="Ouvrir le lien affilié" onPress={() => Linking.openURL(provider.affiliateUrl)} />
+      <Text style={styles.footerNote}>
+        En continuant, vous quittez CompareTransfer AI. Vérifiez toujours les frais, le taux et le délai avant de valider.
+      </Text>
+
+      <AppButton label={`Continuer vers ${provider.name}`} onPress={() => Linking.openURL(provider.affiliateUrl)} />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   content: {
+    alignSelf: "center",
+    gap: spacing.md,
+    maxWidth: 960,
     padding: spacing.md,
     paddingBottom: spacing.xl,
-    gap: spacing.md
+    width: "100%"
   },
   emptyState: {
-    flex: 1,
     alignItems: "center",
+    flex: 1,
     justifyContent: "center",
     padding: spacing.md
   },
   header: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     gap: spacing.md
   },
   headerText: {
@@ -85,6 +104,19 @@ const styles = StyleSheet.create({
   subtitle: {
     color: colors.muted,
     marginTop: spacing.xs
+  },
+  noticeCard: {
+    gap: spacing.sm
+  },
+  noticeHeader: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: spacing.sm
+  },
+  noticeTitle: {
+    color: colors.ink,
+    fontSize: 16,
+    fontWeight: "800"
   },
   section: {
     gap: spacing.sm
@@ -105,5 +137,10 @@ const styles = StyleSheet.create({
   body: {
     color: colors.text,
     lineHeight: 22
+  },
+  footerNote: {
+    color: colors.muted,
+    fontSize: 13,
+    lineHeight: 19
   }
 });
